@@ -9,7 +9,10 @@ const jwt = require('jwt-simple')
 const User = require('./models/user')
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: 'https://aouasow1.github.io'
+}));
+
 app.use(express.json());
 const router = express.Router()
 const secret = 'supersecret'
