@@ -156,8 +156,7 @@ router.delete('/songs/:id', async(req, res) => {
 })
 
 app.use('/api', router);
-var port = process.env.PORT || 8080
-app.listen(port)
+app.listen(8080)
 
 
 
