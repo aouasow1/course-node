@@ -10,7 +10,9 @@ const User = require('./models/user')
 
 const app = express();
 app.use(cors({
-    origin: 'https://aouasow1.github.io/'
+    origin: 'https://aouasow1.github.io',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'x-auth']
 }));
 
 app.use(express.json());
