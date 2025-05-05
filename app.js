@@ -156,9 +156,6 @@ router.delete('/songs/:id', async(req, res) => {
 })
 
 
-app.use(cors({
-    origin: 'https://aouasow1.github.io/'
-}));
 app.use('/api', router);
 app.listen(8080)
 
