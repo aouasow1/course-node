@@ -35,6 +35,59 @@ router.post('/user', async(req, res) => {
             
     }
 })
+//Authentificate
+//post request-reason why is because when you login you are creating what we call a new session
+router.post('/auth', async(req, res) => {
+    if(!req.body.username || !req.body.password) {
+        res.status(400).json({error: "Missing username or password"})
+        return
+    }
+    //try to find the udsername in the database, then see if it match with username and password
+    //await finding a user
+    let user = await User.findOne({username: req.body.username})
+        //connection or server error
+    if(!user) {
+            res.status(401).json({error: "Bad Username"})
+        }
+        //check to see if user password match the request password
+    else {
+        if(user.password != req.body.password) {
+            res.status(401).json({error: 'Bad Password'})
+            }
+            //successful login
+        else {
+                //create a token that is encoded with the jwt
+            username2 = user.username
+
+            const token = jwt.encode({username: user.username}, secret)
+            const auth = 1
+
+            //respond with token
+            res.json({
+                username2,
+                token: token,
+                auth: auth
+            })
+            }
+        }
+})
+//check status with valid token, see if it match with front end
+router.get('/status', async(req,res) => {
+    if(!req.headers['x-auth']) {
+        return res.status(401).json({error: 'Missing x-auth'})
+    }
+    //if x-auth contains the token(it should)
+    const token = req.headers['x-auth']
+    try {
+        const decoded = jwt.decode(token, secret)
+        //send back all username and status to the user or in frontend
+        let users = User.find({}, 'username status')
+        res.json(users)
+    }
+    catch(ex) {
+        res.status().json({error: 'Invalid JWT'})
+    }
+})
 
 
 //grab all song in a database
@@ -103,7 +156,8 @@ router.delete('/songs/:id', async(req, res) => {
 })
 
 app.use('/api', router);
-app.listen(8080)
+var port = process.env.PORT || 8080
+app.listen(port)
 
 
 
